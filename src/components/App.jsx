@@ -1,3 +1,4 @@
+import css from './App.module.css';
 import ContactForm from './contactForm/ContactForm';
 import ContactList from './contactList/ContactList';
 import Filter from './filter/Filter';
@@ -14,6 +15,20 @@ export class App extends Component {
     ],
     filter: '',
   };
+
+  componentDidMount() {
+    const parsedContacts = JSON.parse(localStorage.getItem('contacts'));
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts });
+    }
+  }
+
+  componentDidUpdate(prevState) {
+    const { contacts } = this.state;
+    if (contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(contacts));
+    }
+  }
 
   deleteContact = id => {
     this.setState(prevState => ({
@@ -58,14 +73,7 @@ export class App extends Component {
     const { filter } = this.state;
     const visibleContacts = this.getVisibleContacts();
     return (
-      <div
-        style={{
-          height: '100vh',
-          marginLeft: '40px',
-          fontSize: 20,
-          color: '#010101',
-        }}
-      >
+      <div className={css.app}>
         <h1>Phonebook</h1>
         <ContactForm onSubmit={this.addContact} />
         <h2>Contacts</h2>
